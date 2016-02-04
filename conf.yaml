@@ -1,0 +1,4 @@
+smalliobenchfs:
+  num-concurrent-ops: 500
+ceph:
+  osd_journal_size: 64
