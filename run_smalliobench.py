@@ -66,4 +66,5 @@ def write_ceph_conf(config):
 with tempfile.NamedTemporaryFile() as ceph_conf_file:
     ceph_conf_file.write(write_ceph_conf(ceph_config))
     proc = subprocess.Popen(
-        args.smalliob
+        args.smalliobench,
+        
