@@ -68,6 +68,7 @@ except Exception as e:
 
 bench_config = config.get('smalliobenchfs', {})
 ceph_config = config.get('ceph', {})
+analysis_config = config.get('analysis', {})
 
 LOG_FILE_NAME = "log_output.log"
 log_file = os.path.join(args.output_path, LOG_FILE_NAME)
@@ -83,6 +84,7 @@ summary_file = os.path.join(args.output_path, SUMMARY_NAME)
 
 
 def process_log_file(fd):
+    skip = analysis_config.get('skip_time', 0)
     with open(output_file, 'a+') as ofd:
         l1 = fd.readline()
         start = json.loads(l1)['start']
@@ -99,8 +101,9 @@ def process_log_file(fd):
                 avg = sum(recent)/len(recent)
                 npc = np.percentile(recent, 99)
                 iops = float(len(recent)) / (t - last)
-                print >>ofd, t-start, avg, npc, iops
-                ps += [(t, avg, npc, iops)]
+                if t > skip:
+                    print >>ofd, t-start, avg, npc, iops
+                    ps += [(t, avg, npc, iops)]
                 last = t
                 current = []
         def project(ind, l):
