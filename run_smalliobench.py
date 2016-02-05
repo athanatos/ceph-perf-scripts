@@ -130,12 +130,18 @@ except Exception, e:
     sys.exit(1)
 
 proc = None
+os.mkfifo(fifo_file)
 def on_exit():
     try:
         proc.kill()
     except:
         pass
+    try:
+        os.unlink(fifo_file)
+    except:
+        pass
 atexit.register(on_exit)
+
 
 argl = [args.smalliobench_path]
 argl += ['--filestore-path', args.filestore_path]
@@ -149,7 +155,6 @@ for arg, val in ceph_config.iteritems():
     argl += ['--' + str(arg), str(val)]
         
 try:
-    os.mkfifo(fifo_file)
     proc = subprocess.Popen(
         argl,
         stdout = open(log_file, 'a+'),
