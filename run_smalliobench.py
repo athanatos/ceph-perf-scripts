@@ -82,6 +82,7 @@ def process_log_file(fd):
     last = start
     current = []
     for line in fd.xreadlines():
+        print line
         val = json.loads(line)
         if val['type'] != 'write_applied':
             continue
@@ -127,7 +128,7 @@ with tempfile.NamedTemporaryFile() as ceph_conf_file:
         sys.exit(1)
 
     time.sleep(10)
-    with open(op_dump_file, 'rw') as tfd:
+    with open(op_dump_file, 'a+') as tfd:
         process_log_file(tfd)
 
 proc.wait()
