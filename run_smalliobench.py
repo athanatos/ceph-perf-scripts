@@ -77,50 +77,52 @@ def write_ceph_conf(config):
             value=value)
     return ret
 
-def process_log_file(fd):
-    l1 = fd.readline()
-    start = json.loads(l1)['start']
-    last = start
-    recent = []
-    ps = []
-    for line in fd.xreadlines():
-        val = json.loads(line)
-        if val['type'] != 'write_applied':
-            continue
-        t = val['start']
-        recent += [val['latency']]
-        if t - last > 1:
-            avg = sum(recent)/len(recent)
-            npc = np.percentile(recent, 99)
-            iops = len(recent) / (t - last)
-            print t-start, avg, npc, iops
-            ps += [(t, avg, npc, iops)]
-            last = t
-            current = []
-    def project(ind, l):
-        return [x[ind] for x in l]
-    nn_latencies = np.array(project(2, ps))
-    tpt = np.array(project(3, ps))
-    return {
-        '99_latency_stddev_micro': np.std(nn_latencies) * (10**6),
-        '99_latency_avg_micro': np.mean(nn_latencies) * (10**6),
-        'avg_latency_micro': np.mean(project(1, ps)) * (10**6),
-        'throughput_stddev': np.std(tpt),
-        'throughput_avg': np.mean(tpt),
-    }
-        
-
-OP_DUMP_FILE_NAME = "ops.json"
-op_dump_file = os.path.join(args.output_path, OP_DUMP_FILE_NAME)
-
 LOG_FILE_NAME = "log_output.log"
 log_file = os.path.join(args.output_path, LOG_FILE_NAME)
 
-JOURNAL_LOG_NAME = "filestore.log"
-jlog_file = os.path.join(args.output_path, JOURNAL_LOG_NAME)
-
 FIFO_NAME = "ops.fifo"
 fifo_file = os.path.join(args.output_path, FIFO_NAME)
+
+OUTPUT_NAME = "output.tsv"
+output_file = os.path.join(args.output_path, OUTPUT_NAME)
+
+SUMMARY_NAME = "summary.tsv"
+summary_file = os.path.join(args.output_path, SUMMARY_NAME)
+
+
+def process_log_file(fd):
+    with open(output_file, 'a+') as ofd:
+        l1 = fd.readline()
+        start = json.loads(l1)['start']
+        last = start
+        recent = []
+        ps = []
+        for line in fd.xreadlines():
+            val = json.loads(line)
+            if val['type'] != 'write_applied':
+                continue
+                t = val['start']
+                recent += [val['latency']]
+                if t - last > 1:
+                    avg = sum(recent)/len(recent)
+                npc = np.percentile(recent, 99)
+                iops = len(recent) / (t - last)
+                print >>ofd, t-start, avg, npc, iops
+                ps += [(t, avg, npc, iops)]
+                last = t
+            current = []
+        def project(ind, l):
+            return [x[ind] for x in l]
+        nn_latencies = np.array(project(2, ps))
+        tpt = np.array(project(3, ps))
+        return {
+            '99_latency_stddev_micro': np.std(nn_latencies) * (10**6),
+            '99_latency_avg_micro': np.mean(nn_latencies) * (10**6),
+            'avg_latency_micro': np.mean(project(1, ps)) * (10**6),
+            'throughput_stddev': np.std(tpt),
+            'throughput_avg': np.mean(tpt),
+        }
+        
 
 try:
     logfd = open(log_file, 'w')
@@ -150,11 +152,14 @@ with tempfile.NamedTemporaryFile() as ceph_conf_file:
         os.mkfifo(fifo_file)
         proc = subprocess.Popen(
             argl,
-            stdout = open('/dev/null', 'w'),
-            stderr = open('/dev/null', 'w'))
+            stdout = open(log_file, 'a+')
+            stderr = open(log_file, 'a+'))
 
+        ret = None
         with open(fifo_file, 'r') as fifo_fd:
-            print process_log_file(fifo_fd)
+            ret = print process_log_file(fifo_fd)
+        with open(summary_file, 'a+') as sfd:
+            json.dump(ret, sfd)
         proc.wait()
     except Exception, e:
         print "Error starting smalliobench: ", e
