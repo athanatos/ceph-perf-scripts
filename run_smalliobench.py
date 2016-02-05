@@ -125,6 +125,7 @@ with tempfile.NamedTemporaryFile() as ceph_conf_file:
     except Exception, e:
         print "Error starting smalliobench: ", e
         sys.exit(1)
+    time.sleep(5)
     with open(op_dump_file, 'a+') as tfd:
         process_log_file(tfd)
 
