@@ -52,7 +52,7 @@ parser.add_argument(
 args = parser.parse_args()
 print args
 
-logfd = open(os.path.join(args.output_path, "config.out"), 'a+')
+logfd = open(os.path.join(args.output_path, "config.out"), 'w+')
 
 config = None
 try:
