@@ -99,10 +99,15 @@ def process_log_file(fd):
 
 OP_DUMP_FILE_NAME = "ops.json"
 op_dump_file = os.path.join(args.output_path, OP_DUMP_FILE_NAME)
+
 LOG_FILE_NAME = "log_output.log"
 log_file = os.path.join(args.output_path, LOG_FILE_NAME)
+
 JOURNAL_LOG_NAME = "filestore.log"
 jlog_file = os.path.join(args.output_path, JOURNAL_LOG_NAME)
+
+FIFO_NAME = "ops.fifo"
+fifo_file = os.path.join(args.output_path, FIFO_NAME)
 
 try:
     logfd = open(log_file, 'w')
@@ -116,27 +121,21 @@ with tempfile.NamedTemporaryFile() as ceph_conf_file:
     argl += ['-c', ceph_conf_file.name]
     argl += ['--filestore-path', args.filestore_path]
     argl += ['--journal-path', args.journal_path]
-    argl += ['--log-file', jlog_file]
-    argl += ['--log-to-stderr', 'false']
-    argl += ['--err-to-stderr', 'false']
+    argl += ['--op-dump-file', fifo_file]
 
     for arg, val in bench_config.iteritems():
         argl += ['--' + str(arg), str(val)]
     try:
+        os.mkfifo(fifo_file)
         proc = subprocess.Popen(
             argl,
             stdout = open('/dev/null', 'w'),
-            stderr = subprocess.PIPE)
+            stderr = open('/dev/null', 'w'))
         atexit.register(lambda: proc.kill())
-        proc2 = subprocess.Popen(
-            ['tee', op_dump_file],
-            stdin = proc.stderr,
-            stdout = subprocess.PIPE)
-        atexit.register(lambda: proc2.kill())
 
-        process_log_file(proc2.stdout)
+        with open('r') as fifo_file:
+            process_log_file(fifo_file)
         proc.wait()
-        proc2.wait()
     except Exception, e:
         print "Error starting smalliobench: ", e
         sys.exit(1)
