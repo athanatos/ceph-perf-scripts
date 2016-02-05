@@ -79,7 +79,7 @@ fifo_file = os.path.join(args.output_path, FIFO_NAME)
 OUTPUT_NAME = "output.tsv"
 output_file = os.path.join(args.output_path, OUTPUT_NAME)
 
-SUMMARY_NAME = "summary.tsv"
+SUMMARY_NAME = "summary.json"
 summary_file = os.path.join(args.output_path, SUMMARY_NAME)
 
 
@@ -103,8 +103,8 @@ def process_log_file(fd):
                 npc = np.percentile(recent, 99)
                 iops = float(len(recent)) / (t - last)
                 print t - start, avg, npc, iops
+                print >>ofd, t-start, avg, npc, iops
                 if t - start > skip:
-                    print >>ofd, t-start, avg, npc, iops
                     ps += [(t-start, avg, npc, iops)]
                 last = t
                 recent = []
@@ -128,6 +128,8 @@ try:
 except Exception, e:
     print "Error opening log file: ", e
     sys.exit(1)
+
+print >>logfd, config
 
 proc = None
 os.mkfifo(fifo_file)
