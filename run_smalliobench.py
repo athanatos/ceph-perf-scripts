@@ -119,6 +119,7 @@ with tempfile.NamedTemporaryFile() as ceph_conf_file:
             argl,
             stdout = sys.stdout,
             stderr = sys.stdout)
+        atexit.register(lambda: proc.kill())
     except Exception, e:
         print "Error starting smalliobench: ", e
         sys.exit(1)
