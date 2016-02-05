@@ -69,14 +69,6 @@ except Exception as e:
 bench_config = config.get('smalliobenchfs', {})
 ceph_config = config.get('ceph', {})
 
-def write_ceph_conf(config):
-    ret = "[global]\n"
-    for (key, value) in config.iteritems():
-        print "\t{key} = {value}".format(
-            key=key,
-            value=value)
-    return ret
-
 LOG_FILE_NAME = "log_output.log"
 log_file = os.path.join(args.output_path, LOG_FILE_NAME)
 
@@ -138,32 +130,29 @@ def on_exit():
         pass
 atexit.register(on_exit)
 
-with tempfile.NamedTemporaryFile() as ceph_conf_file:
-    ceph_conf_file.write(write_ceph_conf(ceph_config))
-    argl = [args.smalliobench_path]
-    argl += ['--filestore-path', args.filestore_path]
-    argl += ['--journal-path', args.journal_path]
-    argl += ['--op-dump-file', fifo_file]
+argl = [args.smalliobench_path]
+argl += ['--filestore-path', args.filestore_path]
+argl += ['--journal-path', args.journal_path]
+argl += ['--op-dump-file', fifo_file]
 
-    for arg, val in bench_config.iteritems():
-        argl += ['--' + str(arg), str(val)]
+for arg, val in bench_config.iteritems():
+    argl += ['--' + str(arg), str(val)]
 
-    for arg, val in ceph_config.iteritems():
-        argl += ['--' + str(arg), str(val)]
-
-    try:
-        os.mkfifo(fifo_file)
-        proc = subprocess.Popen(
-            argl,
-            stdout = open(log_file, 'a+'),
-            stderr = open(log_file, 'a+'))
-
-        ret = None
-        with open(fifo_file, 'r') as fifo_fd:
-            ret = process_log_file(fifo_fd)
-        with open(summary_file, 'a+') as sfd:
-            json.dump(ret, sfd)
-        proc.wait()
-    except Exception, e:
-        print "Error starting smalliobench: ", e
-        sys.exit(1)
+for arg, val in ceph_config.iteritems():
+    argl += ['--' + str(arg), str(val)]
+        
+try:
+    os.mkfifo(fifo_file)
+    proc = subprocess.Popen(
+        argl,
+        stdout = open(log_file, 'a+'),
+        stderr = open(log_file, 'a+'))
+    ret = None
+    with open(fifo_file, 'r') as fifo_fd:
+        ret = process_log_file(fifo_fd)
+    with open(summary_file, 'a+') as sfd:
+        json.dump(ret, sfd)
+    proc.wait()
+except Exception, e:
+    print "Error starting smalliobench: ", e
+    sys.exit(1)
