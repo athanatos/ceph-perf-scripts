@@ -93,16 +93,16 @@ def process_log_file(fd):
             val = json.loads(line)
             if val['type'] != 'write_applied':
                 continue
-                t = val['start']
-                recent += [val['latency']]
-                if t - last > 1:
-                    avg = sum(recent)/len(recent)
+            t = val['start']
+            recent += [val['latency']]
+            if t - last > 1:
+                avg = sum(recent)/len(recent)
                 npc = np.percentile(recent, 99)
                 iops = float(len(recent)) / (t - last)
                 print >>ofd, t-start, avg, npc, iops
                 ps += [(t, avg, npc, iops)]
                 last = t
-            current = []
+                current = []
         def project(ind, l):
             return [x[ind] for x in l]
         nn_latencies = np.array(project(2, ps))
