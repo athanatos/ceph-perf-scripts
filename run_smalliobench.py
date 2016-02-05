@@ -100,7 +100,7 @@ def process_log_file(fd):
     def project(ind, l):
         return (x[ind] for x in l)
     return {
-        '99_latency_stddev': np.std(project(2))
+        '99_latency_stddev': np.std(project(2, ps))
     }
         
 
