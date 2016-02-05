@@ -86,6 +86,7 @@ summary_file = os.path.join(args.output_path, SUMMARY_NAME)
 def process_log_file(fd):
     skip = analysis_config.get('skip_time', 0)
     bsize = analysis_config.get('time_bucket', 1)
+    print skip
     with open(output_file, 'a+') as ofd:
         l1 = fd.readline()
         start = json.loads(l1)['start']
