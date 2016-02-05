@@ -16,7 +16,7 @@ import tempfile
 import os
 import os.path
 import json
-from numpy import np
+import numpy as np
 
 parser = argparse.ArgumentParser(
     description='Run smalliobench'
