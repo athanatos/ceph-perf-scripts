@@ -133,8 +133,8 @@ with tempfile.NamedTemporaryFile() as ceph_conf_file:
             stderr = open('/dev/null', 'w'))
         atexit.register(lambda: proc.kill())
 
-        with open('r') as fifo_file:
-            process_log_file(fifo_file)
+        with open(fifo_file, 'r') as fifo_fd:
+            process_log_file(fifo_fd)
         proc.wait()
     except Exception, e:
         print "Error starting smalliobench: ", e
