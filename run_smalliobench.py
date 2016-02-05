@@ -125,7 +125,7 @@ with tempfile.NamedTemporaryFile() as ceph_conf_file:
             ['tee', op_dump_file],
             stdin = proc.stderr,
             stdout = subprocess.PIPE)
-        atexit.register(lambda: proc2kill())
+        atexit.register(lambda: proc2.kill())
 
         process_log_file(proc2.stdout)
         proc.wait()
