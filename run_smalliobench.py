@@ -79,22 +79,29 @@ def write_ceph_conf(config):
 
 def process_log_file(fd):
     l1 = fd.readline()
-    print l1
     start = json.loads(l1)['start']
     last = start
-    current = []
+    recent = []
+    ps = []
     for line in fd.xreadlines():
         val = json.loads(line)
         if val['type'] != 'write_applied':
             continue
         t = val['start']
-        current += [val['latency']]
+        recent += [val['latency']]
         if t - last > 1:
-            avg = sum(current)/len(current)
-            npc = np.percentile(current, 99)
+            avg = sum(recent)/len(recent)
+            npc = np.percentile(recent, 99)
+            iops = len(recent) / (t - last)
             print t-start, avg, npc
+            ps += [(t, avg, npc, iops)]
             last = t
             current = []
+    def project(ind, l):
+        return (x[ind] for x in l)
+    return {
+        '99_latency_stddev': np.std(project(2))
+    }
         
 
 OP_DUMP_FILE_NAME = "ops.json"
@@ -141,7 +148,7 @@ with tempfile.NamedTemporaryFile() as ceph_conf_file:
             stderr = open('/dev/null', 'w'))
 
         with open(fifo_file, 'r') as fifo_fd:
-            process_log_file(fifo_fd)
+            print process_log_file(fifo_fd)
         proc.wait()
     except Exception, e:
         print "Error starting smalliobench: ", e

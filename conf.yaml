@@ -1,5 +1,5 @@
 smalliobenchfs:
   num-concurrent-ops: 500
-  duration: 20
+  duration: 5
 ceph:
   osd_max_write_size: 10
