@@ -15,6 +15,8 @@ import sys
 import tempfile
 import os
 import os.path
+import json
+from pylab import hist
 
 parser = argparse.ArgumentParser(
     description='Run smalliobench'
@@ -73,6 +75,22 @@ def write_ceph_conf(config):
             value=value)
     return ret
 
+def process_log_file(fd):
+    start = json.loads(fd.readline())['start']
+    last = start
+    current = []
+    for line in fd.xreadlines():
+        val = json.loads(line)
+        if val['type'] != 'write_applied':
+            continue
+        if t - last > 1:
+            avg = sum(current)/len(current)
+            npc = hist(current, 100)
+            print avg, npc
+        t = val['start'] - start
+        current += [val['latency']]
+        
+
 OP_DUMP_FILE_NAME = "ops.json"
 op_dump_file = os.path.join(args.output_path, OP_DUMP_FILE_NAME)
 LOG_FILE_NAME = "log_output.log"
@@ -97,8 +115,10 @@ with tempfile.NamedTemporaryFile() as ceph_conf_file:
     try:
         proc = subprocess.Popen(
             args,
-            stdout = logfd,
-            stderr = logfd)
+            stdout = sys.stdout,
+            stderr = sys.stdout)
     except Exception, e:
         print "Error starting smalliobench: ", e
         sys.exit(1)
+
+    process_log_file(open('op_dump_file'))
