@@ -18,6 +18,7 @@ import os.path
 import json
 import numpy as np
 import atexit
+import time
 
 parser = argparse.ArgumentParser(
     description='Run smalliobench'
