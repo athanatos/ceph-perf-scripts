@@ -105,19 +105,19 @@ def process_log_file(fd):
                 print t-start, avg, npc, iops
                 if t > skip:
                     print >>ofd, t-start, avg, npc, iops
-                    ps += [(t, avg, npc, iops)]
+                    ps += [(t-start, avg, npc, iops)]
                 last = t
                 recent = []
         def project(ind, l):
             return [x[ind] for x in l]
         nn_latencies = np.array(project(2, ps))
-        print nn_latencies
         tpt = np.array(project(3, ps))
-        print tpt
+        avg = np.array(project(1, ps))
         return {
             '99_latency_stddev_micro': np.std(nn_latencies) * (10**6),
             '99_latency_avg_micro': np.mean(nn_latencies) * (10**6),
-            'avg_latency_micro': np.mean(project(1, ps)) * (10**6),
+            'stddev_avg_latency_micro': np.std(avg) * (10**6),
+            'avg_latency_micro': np.mean(avg) * (10**6),
             'throughput_stddev': np.std(tpt),
             'throughput_avg': np.mean(tpt),
         }
