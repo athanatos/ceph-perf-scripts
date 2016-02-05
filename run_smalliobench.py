@@ -141,13 +141,16 @@ atexit.register(on_exit)
 with tempfile.NamedTemporaryFile() as ceph_conf_file:
     ceph_conf_file.write(write_ceph_conf(ceph_config))
     argl = [args.smalliobench_path]
-    argl += ['-c', ceph_conf_file.name]
     argl += ['--filestore-path', args.filestore_path]
     argl += ['--journal-path', args.journal_path]
     argl += ['--op-dump-file', fifo_file]
 
     for arg, val in bench_config.iteritems():
         argl += ['--' + str(arg), str(val)]
+
+    for arg, val in ceph_config.iteritems():
+        argl += ['--' + str(arg), str(val)]
+
     try:
         os.mkfifo(fifo_file)
         proc = subprocess.Popen(
