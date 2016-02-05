@@ -16,7 +16,7 @@ import tempfile
 import os
 import os.path
 import json
-from pylab import hist
+from numpy import np
 
 parser = argparse.ArgumentParser(
     description='Run smalliobench'
@@ -83,12 +83,14 @@ def process_log_file(fd):
         val = json.loads(line)
         if val['type'] != 'write_applied':
             continue
-        if t - last > 1:
-            avg = sum(current)/len(current)
-            npc = hist(current, 100)
-            print avg, npc
         t = val['start'] - start
         current += [val['latency']]
+        if t - last > 1:
+            avg = sum(current)/len(current)
+            npc = np.percentile(current, 99)
+            print t, avg, npc
+            last = t
+            current = []
         
 
 OP_DUMP_FILE_NAME = "ops.json"
