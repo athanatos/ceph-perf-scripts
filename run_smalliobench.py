@@ -106,7 +106,7 @@ def process_log_file(fd):
                     print >>ofd, t-start, avg, npc, iops
                     ps += [(t, avg, npc, iops)]
                 last = t
-                current = []
+                recent = []
         def project(ind, l):
             return [x[ind] for x in l]
         nn_latencies = np.array(project(2, ps))
