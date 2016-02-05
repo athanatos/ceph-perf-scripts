@@ -106,27 +106,30 @@ except Exception, e:
     print "Error opening log file: ", e
     sys.exit(1)
 
-proc = None
 with tempfile.NamedTemporaryFile() as ceph_conf_file:
     ceph_conf_file.write(write_ceph_conf(ceph_config))
     argl = [args.smalliobench_path]
     argl += ['-c', ceph_conf_file.name]
-    argl += ['--op-dump-file', op_dump_file]
     argl += ['--filestore-path', args.filestore_path]
     argl += ['--journal-path', args.journal_path]
+
     for arg, val in bench_config.iteritems():
         argl += ['--' + str(arg), str(val)]
     try:
         proc = subprocess.Popen(
             argl,
             stdout = open('/dev/null', 'w'),
-            stderr = open('/dev/null', 'w'))
+            stderr = subprocess.PIPE)
         atexit.register(lambda: proc.kill())
+        proc2 = subprocess.Popen(
+            ['tee', op_dump_file],
+            stdin = proc.stderr,
+            stdout = subprocess.PIPE)
+        atexit.register(lambda: proc2kill())
+
+        process_log_file(proc2.stdout)
+        proc.wait()
+        proc2.wait()
     except Exception, e:
         print "Error starting smalliobench: ", e
         sys.exit(1)
-    time.sleep(5)
-    with open(op_dump_file, 'a+') as tfd:
-        process_log_file(tfd)
-
-proc.wait()
