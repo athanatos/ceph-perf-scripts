@@ -157,7 +157,7 @@ with tempfile.NamedTemporaryFile() as ceph_conf_file:
 
         ret = None
         with open(fifo_file, 'r') as fifo_fd:
-            ret = print process_log_file(fifo_fd)
+            ret = process_log_file(fifo_fd)
         with open(summary_file, 'a+') as sfd:
             json.dump(ret, sfd)
         proc.wait()
