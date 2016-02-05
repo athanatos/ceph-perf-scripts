@@ -59,7 +59,6 @@ try:
         with open(confpath) as config_file:
             configstr += config_file.read()
     print configstr
-    print >>logfd, configstr
     config = yaml.load(configstr)
 except Exception as e:
     print "Error opening config {config}: {error}".format(
@@ -71,7 +70,8 @@ with open(os.path.join(args.output_path, "config.in"), 'a+') as logfd:
     json.dump({
         'config': config,
         'args': vars(args)
-    }, logfd)
+    },
+    logfd)
 
 bench_config = config.get('smalliobenchfs', {})
 ceph_config = config.get('ceph', {})
