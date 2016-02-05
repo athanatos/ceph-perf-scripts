@@ -93,14 +93,20 @@ def process_log_file(fd):
             avg = sum(recent)/len(recent)
             npc = np.percentile(recent, 99)
             iops = len(recent) / (t - last)
-            print t-start, avg, npc
+            print t-start, avg, npc, iops
             ps += [(t, avg, npc, iops)]
             last = t
             current = []
     def project(ind, l):
         return [x[ind] for x in l]
+    99_latencies = np.array(project(2, ps))
+    tpt = np.array(project(3, ps))
     return {
-        '99_latency_stddev': np.std(np.array(project(2, ps)))
+        '99_latency_stddev_micro': np.std(99_latencies) * (10**6)
+        '99_latency_avg_micro': np.mean(99_latencies) * (10**6)
+        'avg_latency_micro': np.mean(project(1, ps)) * (10**6)
+        'throughput_stddev': np.std(tpt)
+        'throughput_avg': np.mean(tpt)
     }
         
 
