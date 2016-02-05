@@ -85,7 +85,7 @@ def process_log_file(fd):
         val = json.loads(line)
         if val['type'] != 'write_applied':
             continue
-        t = val['start'] - start
+        t = val['start']
         current += [val['latency']]
         if t - last > 1:
             avg = sum(current)/len(current)
@@ -125,8 +125,6 @@ with tempfile.NamedTemporaryFile() as ceph_conf_file:
     except Exception, e:
         print "Error starting smalliobench: ", e
         sys.exit(1)
-
-    time.sleep(10)
     with open(op_dump_file, 'a+') as tfd:
         process_log_file(tfd)
 
