@@ -102,6 +102,7 @@ op_dump_file = os.path.join(args.output_path, OP_DUMP_FILE_NAME)
 LOG_FILE_NAME = "log_output.log"
 log_file = os.path.join(args.output_path, LOG_FILE_NAME)
 JOURNAL_LOG_NAME = "filestore.log"
+jlog_file = os.path.join(args.output_path, JOURNAL_LOG_NAME)
 
 try:
     logfd = open(log_file, 'w')
@@ -115,6 +116,7 @@ with tempfile.NamedTemporaryFile() as ceph_conf_file:
     argl += ['-c', ceph_conf_file.name]
     argl += ['--filestore-path', args.filestore_path]
     argl += ['--journal-path', args.journal_path]
+    argl += ['--log-file', jlog_file]
     argl += ['--log-to-stderr', 'false']
     argl += ['--err-to-stderr', 'false']
 
