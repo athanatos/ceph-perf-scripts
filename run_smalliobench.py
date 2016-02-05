@@ -118,9 +118,9 @@ with tempfile.NamedTemporaryFile() as ceph_conf_file:
         argl += ['--' + str(arg), str(val)]
     try:
         proc = subprocess.Popen(
-            argl)
-            #stdout = sys.stdout,
-            #stderr = sys.stdout)
+            argl,
+            stdout = open('/dev/null', 'w'),
+            stderr = open('/dev/null', 'w'))
         atexit.register(lambda: proc.kill())
     except Exception, e:
         print "Error starting smalliobench: ", e
