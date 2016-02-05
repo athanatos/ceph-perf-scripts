@@ -78,7 +78,8 @@ def write_ceph_conf(config):
     return ret
 
 def process_log_file(fd):
-    start = json.loads(fd.readline())['start']
+    l1 = fd.readline()
+    start = json.loads(l1)['start']
     last = start
     current = []
     for line in fd.xreadlines():
