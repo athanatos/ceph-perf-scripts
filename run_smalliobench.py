@@ -82,7 +82,6 @@ def process_log_file(fd):
     last = start
     current = []
     for line in fd.xreadlines():
-        print line
         val = json.loads(line)
         if val['type'] != 'write_applied':
             continue
@@ -91,7 +90,7 @@ def process_log_file(fd):
         if t - last > 1:
             avg = sum(current)/len(current)
             npc = np.percentile(current, 99)
-            print t, avg, npc
+            print t-start, avg, npc
             last = t
             current = []
         
