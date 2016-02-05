@@ -85,6 +85,7 @@ summary_file = os.path.join(args.output_path, SUMMARY_NAME)
 
 def process_log_file(fd):
     skip = analysis_config.get('skip_time', 0)
+    bsize = analysis_config.get('time_bucket', 1)
     with open(output_file, 'a+') as ofd:
         l1 = fd.readline()
         start = json.loads(l1)['start']
@@ -97,7 +98,7 @@ def process_log_file(fd):
                 continue
             t = val['start']
             recent += [val['latency']]
-            if t - last > 1:
+            if t - last > bsize:
                 avg = sum(recent)/len(recent)
                 npc = np.percentile(recent, 99)
                 iops = float(len(recent)) / (t - last)
