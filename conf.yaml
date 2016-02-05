@@ -4,4 +4,4 @@ smalliobenchfs:
 ceph:
   osd_max_write_size: 10
 analysis:
-	skip_time: 10
+  skip_time: 10
