@@ -52,6 +52,8 @@ parser.add_argument(
 args = parser.parse_args()
 print args
 
+logfd = open('a+', os.path.join(args.output_path, "config"))
+
 config = None
 try:
     configstr = ""
@@ -59,6 +61,7 @@ try:
         with open(confpath) as config_file:
             configstr += config_file.read()
     print configstr
+    print >>logfd, configstr
     config = yaml.load(configstr)
 except Exception as e:
     print "Error opening config {config}: {error}".format(
@@ -70,7 +73,7 @@ bench_config = config.get('smalliobenchfs', {})
 ceph_config = config.get('ceph', {})
 analysis_config = config.get('analysis', {})
 
-LOG_FILE_NAME = "log_output.log"
+LOG_FILE_NAME = "smalliobench_output.log"
 log_file = os.path.join(args.output_path, LOG_FILE_NAME)
 
 FIFO_NAME = "ops.fifo"
@@ -122,15 +125,6 @@ def process_log_file(fd):
             'throughput_avg': np.mean(tpt),
         }
         
-
-try:
-    logfd = open(log_file, 'w')
-except Exception, e:
-    print "Error opening log file: ", e
-    sys.exit(1)
-
-print >>logfd, config
-
 proc = None
 os.mkfifo(fifo_file)
 def on_exit():
@@ -143,7 +137,6 @@ def on_exit():
     except:
         pass
 atexit.register(on_exit)
-
 
 argl = [args.smalliobench_path]
 argl += ['--filestore-path', args.filestore_path]
