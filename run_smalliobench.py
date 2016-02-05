@@ -115,6 +115,14 @@ except Exception, e:
     print "Error opening log file: ", e
     sys.exit(1)
 
+proc = None
+def on_exit():
+    try:
+        proc.kill()
+    except:
+        pass
+atexit.register(on_exit)
+
 with tempfile.NamedTemporaryFile() as ceph_conf_file:
     ceph_conf_file.write(write_ceph_conf(ceph_config))
     argl = [args.smalliobench_path]
@@ -131,7 +139,6 @@ with tempfile.NamedTemporaryFile() as ceph_conf_file:
             argl,
             stdout = open('/dev/null', 'w'),
             stderr = open('/dev/null', 'w'))
-        atexit.register(lambda: proc.kill())
 
         with open(fifo_file, 'r') as fifo_fd:
             process_log_file(fifo_fd)
