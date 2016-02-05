@@ -98,7 +98,7 @@ def process_log_file(fd):
                 if t - last > 1:
                     avg = sum(recent)/len(recent)
                 npc = np.percentile(recent, 99)
-                iops = len(recent) / (t - last)
+                iops = float(len(recent)) / (t - last)
                 print >>ofd, t-start, avg, npc, iops
                 ps += [(t, avg, npc, iops)]
                 last = t
@@ -106,7 +106,9 @@ def process_log_file(fd):
         def project(ind, l):
             return [x[ind] for x in l]
         nn_latencies = np.array(project(2, ps))
+        print nn_latencies
         tpt = np.array(project(3, ps))
+        print tpt
         return {
             '99_latency_stddev_micro': np.std(nn_latencies) * (10**6),
             '99_latency_avg_micro': np.mean(nn_latencies) * (10**6),
