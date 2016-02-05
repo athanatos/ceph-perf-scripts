@@ -152,7 +152,7 @@ with tempfile.NamedTemporaryFile() as ceph_conf_file:
         os.mkfifo(fifo_file)
         proc = subprocess.Popen(
             argl,
-            stdout = open(log_file, 'a+')
+            stdout = open(log_file, 'a+'),
             stderr = open(log_file, 'a+'))
 
         ret = None
