@@ -17,6 +17,7 @@ import os
 import os.path
 import json
 import numpy as np
+import atexit
 
 parser = argparse.ArgumentParser(
     description='Run smalliobench'
@@ -116,9 +117,9 @@ with tempfile.NamedTemporaryFile() as ceph_conf_file:
         argl += ['--' + str(arg), str(val)]
     try:
         proc = subprocess.Popen(
-            argl,
-            stdout = sys.stdout,
-            stderr = sys.stdout)
+            argl)
+            #stdout = sys.stdout,
+            #stderr = sys.stdout)
         atexit.register(lambda: proc.kill())
     except Exception, e:
         print "Error starting smalliobench: ", e
