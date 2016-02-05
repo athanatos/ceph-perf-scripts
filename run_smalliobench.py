@@ -101,6 +101,7 @@ def process_log_file(fd):
                 avg = sum(recent)/len(recent)
                 npc = np.percentile(recent, 99)
                 iops = float(len(recent)) / (t - last)
+                print t-start, avg, npc, iops
                 if t > skip:
                     print >>ofd, t-start, avg, npc, iops
                     ps += [(t, avg, npc, iops)]
