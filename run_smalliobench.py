@@ -107,16 +107,16 @@ except Exception, e:
 proc = None
 with tempfile.NamedTemporaryFile() as ceph_conf_file:
     ceph_conf_file.write(write_ceph_conf(ceph_config))
-    args = ['args.smalliobench_path']
-    args += ['-c', ceph_conf_file.name]
-    args += ['--op-dump-file', op_dump_file]
-    args += ['--filestore-path', args.filestore_path]
-    args += ['--journal-path', args.journal_path]
+    argl = ['args.smalliobench_path']
+    argl += ['-c', ceph_conf_file.name]
+    argl += ['--op-dump-file', op_dump_file]
+    argl += ['--filestore-path', args.filestore_path]
+    argl += ['--journal-path', args.journal_path]
     for arg, val in bench_config.iteritems():
-        args += ['--' + str(arg), str(val)]
+        argl += ['--' + str(arg), str(val)]
     try:
         proc = subprocess.Popen(
-            args,
+            argl,
             stdout = sys.stdout,
             stderr = sys.stdout)
     except Exception, e:
