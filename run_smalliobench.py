@@ -52,8 +52,6 @@ parser.add_argument(
 args = parser.parse_args()
 print args
 
-logfd = open(os.path.join(args.output_path, "config.out"), 'w+')
-
 config = None
 try:
     configstr = ""
@@ -68,6 +66,12 @@ except Exception as e:
         config=args.config,
         error=e)
     sys.exit(1)
+
+with open(os.path.join(args.output_path, "config.in"), 'a+') as logfd:
+    json.dump({
+        'config': config,
+        'args': vars(args)
+    }, logfd)
 
 bench_config = config.get('smalliobenchfs', {})
 ceph_config = config.get('ceph', {})
