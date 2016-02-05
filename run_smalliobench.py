@@ -1,4 +1,4 @@
-#!env python
+#env python
 """
 smalliobench tester script
 
