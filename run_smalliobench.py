@@ -98,7 +98,7 @@ def process_log_file(fd):
             last = t
             current = []
     def project(ind, l):
-        return (x[ind] for x in l)
+        return [x[ind] for x in l]
     return {
         '99_latency_stddev': np.std(np.array(project(2, ps)))
     }
