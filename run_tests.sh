@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DIRECTORY = ~/sjust/output/$1-$(date '+%Y-%m-%d-%H:%M:%S')
+DIRECTORY=~/sjust/output/$1-$(date '+%Y-%m-%d-%H:%M:%S')
 echo $DIRECTORY
 mkdir $DIRECTORY
 for i in 64 32 128 5G 10G
