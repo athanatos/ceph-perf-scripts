@@ -1,0 +1,20 @@
+smalliobenchfs:
+  num-concurrent-ops: 500
+  duration: 60
+  write-ratio: 1
+ceph:
+  osd_max_write_size: 10
+  journal_max_write_entries: 10
+  filestore_max_sync_interval: 3
+  filestore_min_sync_interval: 0.1
+  journal_dynamic_throttle_start_delay: 0.00001
+  journal_percentage_empty_threshold_aggressive_throttle: 20
+  filestore_dynamic_throttle_start_delay: 0.00001
+  filestore_percentage_empty_threshold_aggressive_throttle: 20
+  filestore_queue_max_bytes: 1073741824
+  filestore_odsync_write: true
+  journal_dynamic_throttle: true
+  filestore_do_fast_sync: true
+analysis:
+  time_bucket: 0.5
+  skip_time: 30
