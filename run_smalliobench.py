@@ -147,11 +147,17 @@ argl += ['--filestore-path', args.filestore_path]
 argl += ['--journal-path', args.journal_path]
 argl += ['--op-dump-file', fifo_file]
 
+def strify(x):
+    if type(x) == float:
+        return "%.12f"%(x,)
+    else:
+        return str(x)
+
 for arg, val in bench_config.iteritems():
-    argl += ['--' + str(arg), str(val)]
+    argl += ['--' + str(arg), strify(val)]
 
 for arg, val in ceph_config.iteritems():
-    argl += ['--' + str(arg), str(val)]
+    argl += ['--' + str(arg), strify(val)]
         
 try:
     proc = subprocess.Popen(
