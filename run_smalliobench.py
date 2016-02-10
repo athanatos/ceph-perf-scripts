@@ -12,13 +12,11 @@ import argparse
 import yaml
 import subprocess
 import sys
-import tempfile
 import os
 import os.path
 import json
 import numpy as np
 import atexit
-import time
 
 parser = argparse.ArgumentParser(
     description='Run smalliobench'
@@ -97,36 +95,49 @@ def process_log_file(fd):
         l1 = fd.readline()
         start = json.loads(l1)['start']
         last = start
-        recent = []
+        recent_commit = []
+        recent_apply = []
         ps = []
         for line in fd.xreadlines():
             val = json.loads(line)
-            if val['type'] != 'write_applied':
-                continue
             t = val['start']
-            recent += [val['latency']]
-            if t - last > bsize:
-                avg = sum(recent)/len(recent)
-                npc = np.percentile(recent, 99)
-                iops = float(len(recent)) / (t - last)
-                print t - start, avg, npc, iops
-                print >>ofd, t-start, avg, npc, iops
+
+            if val['type'] == 'write_applied':
+                recent_apply += [val['latency']]
+            elif val['type'] == 'write_committed':
+                recent_commit += [val['latency']]
+
+            if t - last > bsize and len(recent_apply) > 0 and len(recent_commit) > 0:
+                avg_apply = sum(recent_apply)/len(recent_apply)
+                npc_apply = np.percentile(recent_apply, 99)
+                avg_commit = sum(recent_commit)/len(recent_commit)
+                npc_commit = np.percentile(recent_commit, 99)
+                iops = float(len(recent_apply)) / (t - last)
+                print t - start, avg_apply, npc_apply, avg_commit, npc_commit, iops
+                print >>ofd, t - start, avg_apply, npc_apply, avg_commit, npc_commit, iops
                 if t - start > skip:
-                    ps += [(t-start, avg, npc, iops)]
+                    ps += [(t-start, avg_apply, npc_apply, avg_commit, npc_commit, iops)]
                 last = t
-                recent = []
+                recent_apply = []
+                recent_commit = []
         def project(ind, l):
             return [x[ind] for x in l]
-        nn_latencies = np.array(project(2, ps))
-        tpt = np.array(project(3, ps))
-        avg = np.array(project(1, ps))
+        avg_apply = np.array(project(1, ps))
+        nn_apply_latencies = np.array(project(2, ps))
+        avg_commit = np.array(project(3, ps))
+        nn_commit_latencies = np.array(project(4, ps))
+        iops = np.array(project(5, ps))
         return {
-            '99_latency_stddev_micro': np.std(nn_latencies) * (10**6),
-            '99_latency_avg_micro': np.mean(nn_latencies) * (10**6),
-            'stddev_avg_latency_micro': np.std(avg) * (10**6),
-            'avg_latency_micro': np.mean(avg) * (10**6),
-            'throughput_stddev': np.std(tpt),
-            'throughput_avg': np.mean(tpt),
+            '99_latency_stddev_micro_apply': np.std(nn_apply_latencies) * (10**6),
+            '99_latency_avg_micro_apply': np.mean(nn_apply_latencies) * (10**6),
+            '99_latency_stddev_micro_commit': np.std(nn_commit_latencies) * (10**6),
+            '99_latency_avg_micro_commit': np.mean(nn_commit_latencies) * (10**6),
+            'stddev_avg_latency_micro_apply': np.std(avg_apply) * (10**6),
+            'stddev_avg_latency_micro_commit': np.std(avg_commit) * (10**6),
+            'avg_latency_micro_apply': np.mean(avg_apply) * (10**6),
+            'avg_latency_micro_commit': np.mean(avg_commit) * (10**6),
+            'throughput_stddev': np.std(iops),
+            'throughput_avg': np.mean(iops),
         }
         
 proc = None
