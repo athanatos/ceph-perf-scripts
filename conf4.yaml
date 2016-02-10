@@ -1,0 +1,70 @@
+smalliobenchfs:
+  num-concurrent-ops: 500
+  duration: 600
+  write-ratio: 1
+ceph:
+  debug_lockdep : '0/0'
+  debug_context : '0/0'
+  debug_crush : '0/0'
+  debug_buffer : '0/0'
+  debug_timer : '0/0'
+  debug_filer : '0/0'
+  debug_objecter : '0/0'
+  debug_rados : '0/0'
+  debug_rbd : '0/0'
+  debug_journaler : '0/0'
+  debug_objectcatcher : '0/0'
+  debug_client : '0/0'
+  debug_osd : '0/0'
+  debug_optracker : '0/0'
+  debug_objclass : '0/0'
+  debug_filestore : '0/0'
+  debug_keyvaluestore : '0/0'
+  debug_newstore : '0/0'
+  debug_journal : '0/0'
+  debug_ms : '0/0'
+  debug_monc : '0/0'
+  debug_tp : '0/0'
+  debug_auth : '0/0'
+  debug_finisher : '0/0'
+  debug_heartbeatmap : '0/0'
+  debug_perfcounter : '0/0'
+  debug_asok : '0/0'
+  debug_throttle : '0/0'
+  debug_mon : '0/0'
+  debug_paxos : '0/0'
+  debug_rgw : '0/0'
+  osd_op_num_threads_per_shard : 2
+  osd_op_num_shards : 8
+
+  filestore_op_threads : 20
+  ms_crc_data : false
+  ms_crc_header : false
+  filestore_fd_cache_size : 1024
+  filestore_fd_cache_shards : 32
+  cephx_sign_messages : false
+  cephx_require_signatures : false
+  ms_dispatch_throttle_bytes : 0
+  throttler_perf_counter : false
+  ms_tcp_nodelay : true
+  osd_pool_default_size : 1
+  osd_pool_default_min_size : 1
+
+  journal_max_write_entries : 10
+  filestore_max_sync_interval : 1
+  filestore_min_sync_interval : 0.1
+  journal_dynamic_throttle_start_delay : 0.0001
+  journal_percentage_empty_threshold_aggressive_throttle : 20
+  filestore_dynamic_throttle_start_delay : 0.0001
+  filestore_percentage_empty_threshold_aggressive_throttle : 20
+
+  filestore_queue_max_bytes : 1073741824
+  filestore_odsync_write : true
+  journal_dynamic_throttle : true
+  filestore_do_fast_sync : false
+  filestore_collect_device_partition_information : false
+
+  osd_max_write_size: 10
+analysis:
+  time_bucket: 0.5
+  skip_time: 30
