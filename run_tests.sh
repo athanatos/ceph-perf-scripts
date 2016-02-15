@@ -3,7 +3,7 @@
 DIRECTORY=~/sjust/output/$1-$(date '+%Y-%m-%d-%H:%M:%S')
 echo $DIRECTORY
 mkdir $DIRECTORY
-for i in 32 10G
+for i in 64
 do
         rm -rf /mnt/filestore/*
         mkdir $DIRECTORY/$i
