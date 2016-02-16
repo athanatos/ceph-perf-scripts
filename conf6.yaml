@@ -72,7 +72,7 @@ ceph:
   dynamic_throttle_low_threshold : 85
   dynamic_throttle_medium_threshold : 45
   dynamic_throttle_high_threshold : 25
-	journal_aio: false
+  journal_aio: false
   journal_aio_throttle : true
   filestore_collect_device_partition_information : false
 
