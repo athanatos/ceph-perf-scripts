@@ -75,20 +75,20 @@ ceph:
   journal_aio_throttle : false
   filestore_collect_device_partition_information : false
 
-  journal_throttle_low_threshhold: 0.4
+  journal_throttle_low_threshhold: 0.5
   journal_throttle_high_threshhold: 0.8
-  journal_throttle_expected_delay_per_byte: 0.0000000596
-  journal_throttle_max_delay_per_byte: 0.0000596
+  journal_throttle_expected_delay_per_byte: 0.0000000081
+  journal_throttle_max_delay_per_byte: 0.00000081
 
-  filestore_queue_low_threshhold: 0.4
-  filestore_queue_high_threshhold: 0.8
-  filestore_queue_bytes_expected_delay_per_byte: 0.0000000596
-  filestore_queue_bytes_max_delay_per_byte: 0.0000596
+  filestore_queue_low_threshhold: 0.1
+  filestore_queue_high_threshhold: 0.6
+  filestore_queue_bytes_expected_delay_per_byte: 0.0000000081
+  filestore_queue_bytes_max_delay_per_byte: 0.00000081
   filestore_queue_ops_expected_delay_per_op: 0.00001
   filestore_queue_ops_max_delay_per_op: 0.001
 
   filestore_caller_concurrency: 30
-  journal_sync_threshhold: 0.4
+  journal_sync_threshhold: 0.5
 
   osd_max_write_size: 10
 analysis:
