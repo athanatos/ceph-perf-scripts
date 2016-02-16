@@ -63,8 +63,8 @@ ceph:
   journal_dynamic_throttle_start_delay : 0.0001
   filestore_dynamic_throttle_start_delay : 0.0001
 
-  filestore_queue_max_bytes : 4194304
-  filestore_queue_max_ops : 64
+  filestore_queue_max_bytes : 10737418240
+  filestore_queue_max_ops : 128
   filestore_odsync_write : false
   dynamic_throttle_low_delay_multiplier : 5
   dynamic_throttle_medium_delay_multiplier : 10
