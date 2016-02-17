@@ -80,8 +80,8 @@ ceph:
   journal_throttle_expected_delay_per_byte: 0.0000000053
   journal_throttle_max_delay_per_byte: 0.00000106
 
-  filestore_queue_low_threshhold: 0.2
-  filestore_queue_high_threshhold: 0.7
+  filestore_queue_low_threshhold: 0.1
+  filestore_queue_high_threshhold: 0.5
   filestore_queue_bytes_expected_delay_per_byte: 0.0000000053
   filestore_queue_bytes_max_delay_per_byte: 0.00000106
   filestore_queue_ops_expected_delay_per_op: 0.00004
