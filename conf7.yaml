@@ -87,6 +87,9 @@ ceph:
   filestore_queue_ops_expected_delay_per_op: 0.00004
   filestore_queue_ops_max_delay_per_op: 0.004
 
+  filestore_expected_throughput_bytes: 524288000
+  filestore_expected_throughput_ops: 23000
+
   filestore_caller_concurrency: 30
 
   osd_max_write_size: 10
