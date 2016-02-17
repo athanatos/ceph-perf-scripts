@@ -88,7 +88,6 @@ ceph:
   filestore_queue_ops_max_delay_per_op: 0.001
 
   filestore_caller_concurrency: 30
-  journal_sync_threshhold: 0.3
 
   osd_max_write_size: 10
 analysis:
