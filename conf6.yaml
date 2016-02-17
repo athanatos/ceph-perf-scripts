@@ -2,7 +2,7 @@ smalliobenchfs:
   num-concurrent-ops: 500
   duration: 600
   write-ratio: 1
-  num-objects: 1000
+  num-objects: 250
   io-size: 4096
   num-colls: 256
 ceph:
@@ -75,17 +75,17 @@ ceph:
   journal_aio_throttle : false
   filestore_collect_device_partition_information : false
 
-  journal_throttle_low_threshhold: 0.6
-  journal_throttle_high_threshhold: 0.9
-  journal_throttle_expected_delay_per_byte: 0.0000000016
-  journal_throttle_max_delay_per_byte: 0.00000016
+  journal_throttle_low_threshhold: 0.5
+  journal_throttle_high_threshhold: 0.8
+  journal_throttle_expected_delay_per_byte: 0.0000000053
+  journal_throttle_max_delay_per_byte: 0.00000106
 
-  filestore_queue_low_threshhold: 0.3
-  filestore_queue_high_threshhold: 0.8
-  filestore_queue_bytes_expected_delay_per_byte: 0.0000000081
-  filestore_queue_bytes_max_delay_per_byte: 0.00000081
-  filestore_queue_ops_expected_delay_per_op: 0.00001
-  filestore_queue_ops_max_delay_per_op: 0.001
+  filestore_queue_low_threshhold: 0.2
+  filestore_queue_high_threshhold: 0.7
+  filestore_queue_bytes_expected_delay_per_byte: 0.0000000053
+  filestore_queue_bytes_max_delay_per_byte: 0.00000106
+  filestore_queue_ops_expected_delay_per_op: 0.00004
+  filestore_queue_ops_max_delay_per_op: 0.004
 
   filestore_caller_concurrency: 30
 
