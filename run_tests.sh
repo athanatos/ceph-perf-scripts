@@ -7,5 +7,5 @@ for i in 64
 do
         rm -rf /mnt/filestore/*
         mkdir $DIRECTORY/$i
-        ./run_smalliobench.py  --smalliobench-path $2 --journal-path /dev/disk/by-partlabel/journal-$i --config conf6.yaml --filestore-path /mnt/filestore --output-path $DIRECTORY/$i
+        ./run_smalliobench.py  --smalliobench-path $2 --journal-path /dev/disk/by-partlabel/journal-$i --config conf7.yaml --filestore-path /mnt/filestore --output-path $DIRECTORY/$i
 done
