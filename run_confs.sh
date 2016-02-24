@@ -3,7 +3,7 @@
 DIRECTORY=~/sjust/output/$1-$(date '+%Y-%m-%d-%H:%M:%S')
 echo $DIRECTORY
 mkdir $DIRECTORY
-for i in 0.yaml 16-32.yaml 4-8.yaml
+for i in $(ls confs)
 do
         rm -rf /mnt/filestore/*
         mkdir $DIRECTORY/$i
