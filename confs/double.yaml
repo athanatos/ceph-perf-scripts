@@ -1,6 +1,6 @@
 smalliobenchfs:
   num-concurrent-ops: 500
-  duration: 600
+  duration: 1200
   write-ratio: 1
   num-objects: 250
   io-size: 4096
@@ -57,4 +57,4 @@ ceph:
 
 analysis:
   time_bucket: 0.5
-  skip_time: 30
+  skip_time: 200
