@@ -42,15 +42,11 @@ ceph:
   debug_paxos : '0/0'
   debug_rgw : '0/0'
 
-  filestore_queue_low_threshhold: 0.2
-  filestore_queue_high_threshhold: 0.8
-  filestore_queue_max_delay_multiple: 0
-  filestore_queue_high_delay_multiple: 0
-  journal_throttle_high_multiple: 0
-  journal_throttle_max_multiple: 0
+  filestore_queue_low_threshhold: 0.6
+  filestore_queue_high_threshhold: 0.9
 
-  filestore_queue_max_ops: 50
-  filestore_queue_max_bytes: 104857600
+  filestore_queue_max_ops: 100
+  filestore_queue_max_bytes: 209715200
 
   filestore_expected_throughput_bytes: 419430400
   filestore_expected_throughput_ops: 400
