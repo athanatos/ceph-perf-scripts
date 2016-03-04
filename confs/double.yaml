@@ -41,11 +41,9 @@ ceph:
   debug_mon : '0/0'
   debug_paxos : '0/0'
   debug_rgw : '0/0'
-  osd_op_num_threads_per_shard : 2
-  osd_op_num_shards : 8
 
-  filestore_queue_low_threshhold: 0.2
-  filestore_queue_high_threshhold: 0.8
+  filestore_queue_low_threshhold: 0.6
+  filestore_queue_high_threshhold: 0.9
 
   filestore_queue_max_ops: 100
   filestore_queue_max_bytes: 209715200
