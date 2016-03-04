@@ -1,9 +1,9 @@
 smalliobenchfs:
-  num-concurrent-ops: 500
+  num-concurrent-ops: 50
   duration: 1200
   write-ratio: 1
-  num-objects: 250
-  io-size: 4096
+  num-objects: 2000
+  io-size: 8192
   num-colls: 256
 ceph:
   auth_supported : 'none'
